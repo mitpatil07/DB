@@ -1,0 +1,1836 @@
+@Design and Develop SQL DDL statements which demonstrate the use of SQL objects such as Table, View, Index, Sequence, Synonym, different constraints etc.
+
+
+// Index
+//Create Index
+mysql> create table stud(rno int(3), name varchar(20));
+mysql> create index n1 on stud(rno);
+//Show Index Information
+mysql> show index from stud;
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part |  stud      |          1             | n1                 |            1          | rno                      | A               |           0          |     NULL | 
+Mysql> insert into stud values(1,’aa’),(2,’bb’);
+//After inserting rows Cardinality values will change
+mysql> show index from stud;
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part |  stud      |          1             | n1                 |            1          | rno                      | A               |           2          |     NULL | 
+//To Drop Index
+mysql> alter table stud drop index n1;
+
+// View
+//Create View
+mysql> create table account(ano int(3), name varchar(20), balance int);
+mysql> insert into account values(101,'aa',2000),(102,'bb',50000);
+mysql> select *from account;
+
+mysql> create view v2 as select ano,name from account;
+
+//To show View data
+mysql> select * from v2;
+
+//To insert data in View
+mysql> insert into v2 values(103,'cc');
+mysql> select * from v2;
+
+mysql> select * from account;
+
+//To Drop View
+mysql> drop view v2;
+
+// Sequence/ Auto-increment
+//Create auto_increment on column
+mysql> create table cust(cid int(3) primary key auto_increment, name varchar(20));
+Query OK, 0 rows affected (0.44 sec)
+mysql> desc cust;
+
+mysql> insert into cust(name) values('aa'),('bb'),('cc');
+mysql> select * from cust;
+
+mysql> insert into cust values(55,'dd');
+mysql> select * from cust;
+
+
+mysql> insert into cust(name) values('aa'),('bb'),('cc');
+mysql> select * from cust;
+
+
+mysql> delete from cust where cid=58;
+mysql> select * from cust;
+
+mysql> insert into cust(name) values('ee');
+mysql> select * from cust;
+
+//To add auto_increment with certain value
+mysql> alter table cust auto_increment=1001;
+mysql> insert into cust(name) values('aa'),('bb'),('cc');
+mysql> select * from cust;
+
+
+//To remove auto_increment From column
+mysql> alter table cust modify cid int(3);
+mysql> desc cust;
+
+mysql> alter table cust drop primary key;
+======================================================================================================================================================================================================================================================================================================
+1. Unique Constraint
+mysql> create table a1(rno int(3) unique);  // add unique constraint at time of  table creation
+mysql> desc  a1;
+mysql> alter table a1 drop index rno;       // drop unique constraint without name
+mysql> create table a2(rno int(3));
+mysql> alter table a2 add constraint u1 unique (rno); // add unique constraint after table creation
+mysql> alter table a2 drop index u1;    // drop unique constraint with name
+
+2. Not null Constraint
+// add Not null Constraint at time of  table creation
+mysql> create table a1(rno int(3),name varchar(30) not null);
+// add Not null Constraint after  table creation
+mysql> alter table a1 modify name varchar(30) not null;
+// desc table after adding not null constraint
+mysql> desc a1;
+
+// dropping  Not null Constraint 
+mysql> alter table a1 modify name varchar(30);
+// desc table after dropping  not null constraint
+mysql> desc a1;
+
+3. Primary Key
+mysql> create table a1(rno int(3) primary key, name varchar (30));
+mysql> alter table a1 add constraint p1 primary key(rno);
+
+mysql> desc a1;
+
+
+mysql> alter table a1 drop primary key;
+mysql> alter table a1 modify rno int(3);
+mysql> desc a1;
+
+4. Default
+mysql> create table a1(rno int(3), name varchar(30), Address varchar(20) default 'Nashik');
+mysql> alter table a1 modify Address varchar(20) default 'Nashik';
+mysql> desc a1;
+
+mysql> alter table a1 modify Address varchar(20);
+mysql> desc a1;
+
+mysql> insert into a1 (rno,name) values(1,'aa');
+mysql> select * from a1;
+
+mysql> insert into a1 values(1,'aa','pune');
+mysql> select * from a1;
+
+
+5. Check
+//To add check constraint at time of table creation
+mysql> create table a1(rno int check (rno>5),name varchar(30));
+//To add check constraint after table creation
+mysql> alter table a1 add constraint c1 check (rno>5);
+//To drop the check constraint, but in MySQL 5.7 version it does nt add check constraint so we cannot remove it.
+mysql> alter table a1 drop constraint c1 ; 
+//To find information of all constraint from a table
+select *from information_schema.table_constraints where table_name='a11';
+
+6. Foreign Key
+mysql> create table a1(rno int primary key);
+mysql> create table a2(rno int, name varchar(20), foreign key f1(rno) references a1(rno) on update cascade on delete cascade);
+mysql> insert into a1 values(1),(2),(3);
+mysql> insert into a2 values(1,'aa'),(2,'bb'),(3,'cc');
+mysql> select * from a1;                                            mysql> select * from a2;
+
+
+
+mysql> update a1 set rno=5 where rno=1;
+mysql> select * from a1;                                            mysql> select * from a2;
+
+
+mysql> delete from  a1 where rno=2;
+mysql> select * from a1;                                            mysql> select * from a2;
+
+
+mysql> SELECT  constraint_name FROM  information_schema.REFERENTIAL_CONSTRAINTS WHERE  constraint_schema = 'db1' AND table_name ='a2';
+
+mysql> alter table a2 drop foreign key a2_ibfk_1;
+mysql> alter table a2 add foreign key f1(rno) references a1(rno);
+======================================================================================================================================================================================================================================================================================================
+
+@Design at least 10 SQL queries for suitable database application using SQL DML statements: all types of Join, Sub-Query and View. 
+DML Commands
+
+mysql> show databases;
+
+
+mysql> use college;
+mysql> create table stud(rno int(3),name varchar(20));
+mysql> desc stud;
+
+
+//DML COMMANDS:
+//INSERT:-
+mysql> insert into stud values(1,'Jayu');
+
+mysql> insert into stud(rno) values(2);
+
+mysql> insert into stud(name) values('Komu');
+
+//SELECT:-
+mysql> select * from stud;
+
+
+//INSERT multiple records:-
+mysql> insert into stud values(4,'Snehal'),(5,'Prachi'),(6,'Reena');
+
+mysql> select * from stud;
+
+
+//DELETE:-
+mysql> delete from stud where rno=1;
+
+mysql> select * from stud;
+
+
+mysql> delete from stud where name='komu';
+
+mysql> select * from stud;
+
+
+//UPDATE:-
+mysql> update stud set name='Jayu' where rno=2;
+
+mysql> select * from stud;
+
+
+mysql> update stud set rno=3 where name='Snehal';
+
+mysql> select * from stud;
+
+mysql> update stud set rno=4 where rno=5;
+
+mysql> select * from stud;
+
+
+//UPDATE more than 1 condition:-
+mysql> update stud set rno=5,name='Komu' where rno=6;
+
+
+
+//SELECT:-
+mysql> select * from stud where rno=3;
+
+
+mysql> select name from stud where rno=3;
+
+
+mysql> select name from stud where rno>3;
+
+
+mysql> select name from stud where rno!=3;
+
+
+mysql> select * from stud where rno!=3;
+
+
+mysql> alter table stud add city varchar(30);
+
+mysql> desc stud;
+
+
+mysql> select * from stud;
+
+
+mysql> update stud set city='Nashik' where rno=2 or rno=4;
+
+mysql> select * from stud;
+
+
+mysql> update stud set city='Pune' where rno in(3,5);
+
+mysql> select * from stud;
+
+
+//ORDER BY:-
+mysql> select * from stud order by rno;
+
+
+mysql> select * from stud order by rno desc;
+
+
+mysql> select * from stud order by name;
+
+
+mysql> select * from stud order by city,rno;
+
+
+//LIKE:-
+mysql> select * from stud where name like 'J%';
+
+
+mysql> select * from stud where name like 'K___';
+
+
+mysql> select * from stud where name like '%a%';
+
+
+mysql> select * from stud where name like '%i';
+
+//DISTINCT:-
+mysql> select distinct(city) from stud;
+
+//
+mysql> alter table stud add marks int(3);
+
+mysql> desc stud;
+
+
+mysql> select * from stud;
+
+mysql> update stud set marks=80 where rno=2;
+mysql> update stud set marks=60 where rno=3;
+
+mysql> select * from stud;
+
+//NULL Operator:-
+mysql> select * from stud where marks is not null;
+
+//Aggregate (COUNT):-
+mysql> select count(*) from stud;
+
+
+mysql> select count(marks) from stud;
+
+
+mysql> select count(*) from stud where city='Nashik';
+ count(*)|
+        2|
+
+mysql> select count(marks) from stud where city='Nashik';
+ count(marks) 
+            1 
+
+//AVERAGE:-
+mysql> select avg(marks) from stud;
+
+
+mysql> select max(name) from stud;
+
+
+mysql> select min(name) from stud;
+
+
+mysql> select sum(name) from stud;
+
+
+//GROUP BY & HAVING:-
+mysql> select city,max(marks) from stud group by city;
+
+
+mysql> select city,max(marks) from stud group by city having max(marks)>70;
+
+
+mysql> select city,avg(marks) from stud group by city having max(marks)>70;
+
+mysql> select city,avg(marks) from stud group by city having avg(marks)>70;
+mysql> select city, min(marks) from stud group by city having min(marks)<70;
+
+
+Sub queries.
+// Create table EMP
+mysql> create table Emp(Eid int, Ename varchar(20), City varchar(20), Post varchar(15),Salary int, deptno int);
+//Insert 10 Rows in the same
+mysql> insert into Emp values
+    (1,'John','Nashik','Clerk',5000,10),
+    (2,'Seema','Aurangabad','Developer',20000,20),
+    (3,'Amita','Nagar','Manager',70000,20),
+    (4,'Rakesh','Pune','Analyst',8000,10),
+    (5,'Samata','Nashik','Tester',20000,10),
+    (6,'Anita','Chandwad','Developer',30000,30),
+    (7,'Bhavika','Pune','Team-LR',50000,30),
+     (8,'Deepa','Mumbai','CEO',90000,10),
+    (9,'Nitin','Nagpur','Clerk',8000,30),
+    (10,'Pooja','Pune','Analyst',45000,20);
+
+mysql> select * from Emp;
+
+
+//Display the information of employees, paid more than ‘pooja' from emp table
+mysql> select * from Emp where salary>(select Salary from Emp where Ename='Pooja');
+
+
+//List the name of the employees, who live in the same city as of  ‘Rakesh’
+mysql> select * from Emp where City=(select City from Emp where Ename='Rakesh');
+
+
+// Display the information of employees, paid greater salary than average salary throughout the company.
+mysql> select * from Emp where Salary>=(select avg(Salary) from Emp);
+
+// Display the information of employees, paid less salary than average salary throughout the company.
+
+mysql> select * from Emp where Salary<(select avg(Salary) from Emp);
+
+//Display the information of employees having maximum salary in company
+mysql> select * from Emp where Salary=(select max(Salary) from Emp);
+
+
+//Display the information of employees having minimum salary in company
+mysql> select * from Emp where Salary=(select min(Salary) from Emp);
+
+
+// IN Example- Display the employee name ,salary and department no of those employees whose salary is the minimum salary of  that department.
+mysql> SELECT Ename, salary, deptno  FROM EMP WHERE salary IN ( SELECT MIN(salary) FROM emp GROUP BY deptno );
+
+
+>All Example- Display the employee name, salary and department no of those employees whose salary is higher than all  developers salary.
+mysql> SELECT Ename, salary, deptno  FROM EMP WHERE salary > All ( SELECT salary FROM emp Where post= 'Developer'
+
+<All Example- Display the employee name, salary and department no of those employees whose salary is lower than all  developers salary
+mysql> SELECT Ename, salary, deptno  FROM EMP WHERE salary < All ( SELECT salary FROM emp Where post= 'Developer'
+
+
+>Any Example- Display the employee name, salary and department no of those employees whose salary is higher than salary of any  developers salary
+mysql> SELECT Ename, salary, deptno  FROM EMP WHERE salary >any ( SELECT salary FROM emp Where post= 'Developer')
+
+<Any Example- Display the employee name, salary and department no of those employees whose salary is less than salary of developers salary.
+mysql> SELECT Ename, salary, deptno  FROM EMP WHERE salary <any ( SELECT salary FROM emp Where post= 'Developer')
+======================================================================================================================================================================================================================================================================================================
+
+@Unnamed PL/SQL code block: Use of Control structure and Exception handling is mandatory. Write a PL/SQL block of code for the following requirements:- 
+Schema: 
+1. Borrower(Roll_no, Name, Date_of_Issue, NameofBook, Status) 
+2. Fine(Roll_no,Date,Amt) 
+Accept roll_no & name of book from user. 
+Check the number of days (from date of issue), if days are between 15 to 30 then fine amount will be Rs 5per day. 
+If no. of days>30, per day fine will be Rs 50 per day & for days less than 30, Rs. 5 per day. 
+After submitting the book, status will change from I to R. 
+If condition of fine is true, then details will be stored into fine table. 
+OR
+Write a PL/SQL code block to calculate the area of a circle for a value of radius varying from 5 to 9. Store the radius and the corresponding values of calculated area in an empty table named areas, consisting of two columns, radius and area. 
+
+First set delimiter
+Mysql> Delimiter //
+
+Example- 1
+Procedure without any Parameter
+Mysql> CREATE PROCEDURE AllStud() 
+BEGIN 
+SELECT * FROM Stud; 
+END //
+
+Command  to run the Procedure
+MySQL> call AllStud()//
+
+Example- 2
+Procedure with one IN Parameter- 
+Procedure to select info from table whose name is given at run time to Procedure.
+MySQL> CREATE PROCEDURE Cname(IN SName VARCHAR(25))
+ BEGIN
+ SELECT * FROM stud where Name=SName;
+ END // 
+
+Command  to run the Procedure
+MySQL> call Cname('Amit')//
+Example- 3
+Procedure with Two IN Parameter- 
+Procedure to update stud name whose rno is given at run time to Procedure.
+MySQL> CREATE PROCEDURE Uname(IN rno1 int, SName VARCHAR(25))
+ BEGIN
+Select * from stud;
+Update stud set Name=SName where rno=rno1;
+Select * from stud;
+ END 
+// 
+Command  to run the Procedure
+MySQL> call Uname (7,'Jiya')//
+
+Example- 4
+Procedure with IN and OUT Parameter- 
+Procedure to insert row into stud name whose rno is given at run time to Procedure.
+MySQL> CREATE PROCEDURE IO(IN Rno1 int, OUT SName VARCHAR(20))
+ BEGIN
+ SELECT Name into SName FROM stud where Rno=Rno1;
+ END
+//
+Command  to run the Procedure
+mysql> call IO (2,@Sname)//
+mysql> select @Sname//
+Example- 5
+Assignment Given By University- 
+mysql> create table B(Rno int, Name varchar(20), DOI date, Bname varchar(20), Status char(1))//
+
+mysql> create table Fine(Rno int, Date date, Amt int)//
+
+mysql> insert into B values
+(1,'Amit','2020-10-1','C++','I'),
+(2,'Shivani','2020-09-10','Java','I'), 
+(3,'Roshan','2020-09-25','DBMS','I')
+(1,'Amit','2020-09-28','CN','I')
+(4,'Janavi','2020-10-17','Java','I')//
+
+mysql> select * from B//
++------+---------+------------+-------+--------+
+| Rno  | Name    | DOI        | Bname | Status |
++------+---------+------------+-------+--------+
+|    1 | Amit    | 2020-10-01 | C++   | I      |
+|    2 | Shivani | 2020-09-10 | Java  | I      |
+|    3 | Roshan  | 2020-09-25 | DBMS  | I      |
+|    1 | Amit    | 2020-09-28 | CN    | I      |
+|    4 | Janavi  | 2020-10-17 | Java  | I      |
++------+---------+------------+-------+--------+
+
+mysql> select * from Fine//
+Empty set (0.01 sec)
+
+
+
+Create procedure ret1(In Rno1 int(3),Bname1 varchar(30))
+begin
+Declare i_date date;
+Declare diff int;
+Declare fine_amt int;
+Declare status1 char(1);
+Select status into status1 from bor where Rno=Rno1 and Bname=Bname1;
+If (status1 = 'I' ) then
+Select DOI into i_date from bor where Rno=Rno1 and Bname=Bname1;
+SELECT DATEDIFF(CURDATE(), i_date) into diff;
+If (diff>=15 and diff<=30)then
+SET fine_amt=(diff -15) * 5;
+insert into fine values(rno1,CURDATE(), fine_amt);
+elseif (diff>30) then
+SET fine_amt=((diff-30) * 50) ;
+insert into fine values(Rno1,CURDATE(),diff, fine_amt);
+End if;
+Update bor set status='R' where rno=rno1 and Bname=Bname1;
+End if;
+Select * from bor;
+Select * from Fine;
+End;
+
+
+mysql> call P4(2,'Java')//
+======================================================================================================================================================================================================================================================================================================
+
+@Write a Stored Function namely proc_Grade for the categorization of student. If marks scored by students in examination is <=1500 and marks>=990 then student will be placed in distinction category if marks scored are between 989 and900 category is first class, if marks 899 and 825 category is Higher Second Class 
+Write a PL/SQL block for using procedure created with above requirement. 
+Stud_Marks(name, total_marks) 
+Result(Roll,Name, Class) 
+
+
+PLSQL Function
+First set delimiter
+Mysql> Delimiter //
+
+Function for addition of 2 numbers
+Mysql> create function add1(a int, b int) returns int
+ begin
+ Declare c int;
+ Set c=a+b;
+ return c;
+ end
+//
+Command  to run the function
+MySQL> Select add1(20,40)//
+
+Function to find maximum number between 2 numbers 
+MySQL> Create function Max5(n1 Int,n2 Int) Returns Varchar(20)
+BEGIN
+  DECLARE Maximum1 varchar(20);
+ If (n1>n2) then
+ Set Maximum1 = 'Max number is  n1';
+ else
+ set Maximum1='max number is n2';
+ end if;
+return Maximum1;
+ end
+ //
+Command  to run the function
+MySQL> Select Max5(20,40)//
+
+Function to find name from table when rno is given
+(Stud table is required with rno and name column)
+Mysql> create function a1(rno1 int) returns varchar(20)
+Begin
+declare sname varchar(20);
+select name into sname from stud where rno=rno1;
+return sname;
+ end
+ //
+Command  to run the function
+MySQL> Select a1(2);
+
+Function to find grade of student when marks are given
+(Stud table is required with rno and marks column)
+MySQL> Create function Fgrade1(rno1 int) returns varchar(20)
+Begin
+ Declare  grade varchar(20);
+ Declare mark1 int;
+Select marks into mark1 from stud  where rno=rno1;
+If (mark1 >75) then
+set grade='Distiction';
+ElseIf  (mark1>=60 and mark1<75) then
+set grade='Firstclass';
+ElseIf (mark1 <60 and mark1>=40) then
+set grade='Pass Class';
+else
+set grade='Fail';
+end if;
+return grade;
+end;
+//
+
+Command  to run the function
+MySQL> Select Fgrade(2);
+======================================================================================================================================================================================================================================================================================================
+
+@Write a PL/SQL block of code using parameterized Cursor, that will merge the data available in the newly created table N_RollCall with the data available in the table O_RollCall. If the data in the first table already exist in the second table then that data should be skipped. 
+PLSQL Cursor
+
+*************** Simple cursor to print data*****************
+
+mysql> delimiter //
+
+mysql>create procedure cr1()
+begin
+declare eid1 int;
+declare sal1 int;
+declare ename1 varchar(20);
+
+
+declare exit_loop boolean;
+declare c1 cursor for select eid,ename,salary from emp;
+declare continue handler for not found set exit_loop=true;
+
+open c1;
+e1:loop
+fetch c1 into eid1, ename1, sal1;
+select eid1, ename1, sal1;
+
+IF exit_loop THEN
+CLOSE c1;
+LEAVE e1;
+END IF;
+
+END loop e1;
+end
+//
+
+To run cursor use-
+mysql> call cr2()//
+
+************** Cursor to update salary based on condition************
+
+mysql>create procedure cr3()
+begin
+declare eid1 int;
+declare sal1 int;
+declare ename1 varchar(20);
+
+
+declare exit_loop boolean;
+declare c1 cursor for select eid,ename,salary from emp;
+declare continue handler for not found set exit_loop=true;
+
+open c1;
+e1:loop
+fetch c1 into eid1, ename1, sal1;
+
+if (sal1>45000) then
+update emp set salary=sal1+5000 where eid=eid1;
+else
+update emp set salary=sal1+1000 where eid=eid1;
+end if;
+
+IF exit_loop THEN
+CLOSE c1;
+LEAVE e1;
+END IF;
+END loop e1;
+
+select * from emp;
+end
+//
+
+
+
+
+*********** Parameterized cursor for n_rollcall & o_rollcall***********
+
+Create table O_rollcall and n-rollcall
+
+mysql> create table o_rollcall(rno int(3), name varchar(20),address varchar(30))
+
+mysql> create table n_rollcall(rno int(3), name varchar(20),address varchar(30))
+
+Insert some rows in O_rollcall
+
+mysql> insert into o_rollcall values (1,'Anisha','Pune'), (2,'Summit','Chandwad'),(3,'Ram','Nashik'),(4,'Shamal','Nashik'),(5,'Harshal','Pune')
+
+mysql> select * from o_rollcall//
+
+
+mysql> select * from n_rollcall//
+
+Cursor Code
+
+mysql>create procedure cur_rno(IN rno1 int)
+begin
+declare r1 int;
+declare name1 varchar(20);
+declare addr1 varchar(20);
+declare exit_loop boolean;
+declare c1 cursor for select * from o_rollcall where rno=rno1;
+declare continue handler for not found set exit_loop=true;
+
+select * from n_rollcall;
+open c1;
+e1:loop
+fetch c1 into r1,name1,addr1;
+if not exists(select * from n_rollcall where rno=r1) then
+insert into n_rollcall select * from o_rollcall where rno=r1;
+end if;
+
+IF exit_loop THEN
+CLOSE c1;
+LEAVE e1;
+END IF;
+END loop e1;
+select * from n_rollcall;
+end
+//
+====================================================================================================================================================================================================================================================================================================
+@Write a database trigger on Library table. The System should keep track of the records that are being updated or deleted. The old value of updated or deleted records should be added in Library_Audit table. 
+PL SQL Trigger Examples
+mysql> use db1;
+Create table emp1 and Audit
+mysql> create table emp1(eno int, ename varchar(20), salary int);
+mysql> create table audit(action varchar(10), date_of_action datetime,eno int, old_sal int, new_sal int);
+
+Insert Values in emp1
+mysql> insert into emp1 values(101, 'aa',5000),(102,'bb',6000);
+mysql> select * from emp1;
+
+mysql> select * from audit;
+
+Set Delimiter before writing trigger code
+mysql> delimiter //
+
+Trigger Example- 1 for Update on emp1
+Trigger Code
+mysql>  create trigger t1 after update on emp1 for each row
+    begin
+    insert into audit values('Update',now(),old.eno,old.salary,new.salary);
+    end;
+     //
+
+Update some values from emp1(Trigger will run in background)
+mysql>  update emp1 set salary=salary+5000//
+
+After updating emp1, display Audit table data
+mysql> select * from audit//
+
+
+Trigger Example- 2 for insert on emp1
+Trigger Code
+create trigger t2 after insert on emp1 for each row
+     begin
+    insert into audit values('Insert',now(),new.eno,null,new.salary);
+   end;
+     //
+Insert row in emp1(Trigger will run in background)
+mysql>  insert into emp1 values(103, 'Sapana',58000)//
+After updating emp1, display Audit table data
+mysql> select * from audit//
+
+Trigger Example- 3 for delete on emp1
+Trigger Code
+create trigger t3 after delete on emp1 for each row
+    begin
+    insert into audit values('Delete',now(),old.eno,old.salary,null);
+   end;
+     //
+Delete any row in emp1(Trigger will run in background)
+mysql>  delete from emp1 where eno=101//
+After updating emp1, display Audit table data
+mysql> select * from audit//
+
+====================================================================================================================================================================================================================================================================================================
+Implement MYSQL/Oracle database connectivity with front end language(Java) to implement Database navigation operations (add, delete, edit, etc.).
+
+Java MySQL Connectivity Example
+import java.sql.*;
+import java.util.Scanner;
+
+public class mysql1 {
+public static void main(String[] args) {
+ try{
+       Class.forName("com.mysql.jdbc.Driver");
+       Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/db1","root", "root");  
+      Statement sm = c.createStatement();
+	            int ch;
+	            String sql;
+	            Scanner s=new Scanner(System.in);
+	            
+do     {
+	       System.out.println("Enter Choice \n 1.Insert  \n 2.Select  \n 3.Update  \n 4.Delete  \n 5.Exit ");
+	             ch=s.nextInt();
+	             
+	                      switch (ch) {
+	                      case 1:  sql = "Insert into stud values (1,'Ankita',20)";
+	                               sm.executeUpdate(sql);
+	                               System.out.println("Record is Inserted");
+	                               break;
+	                               
+	                      case 2: sql = "SELECT * FROM stud";
+	                               ResultSet rs = sm.executeQuery(sql);
+	                               while(rs.next())
+	                                   {
+	                            	        int  rno1 = rs.getInt("rno");
+	                                     String name1 = rs.getString("name");
+	                                     
+	                                     System.out.println("Roll No: " + rno1);
+	                                     System.out.println("name " + name1);
+	                                     
+	                                     }
+	                               break;
+	                               
+	                       case 3:  sql = "update stud set name='Mona' where name='Ankita'";
+	                                       sm.executeUpdate(sql);
+	                                       System.out.println("Record is updated");
+	                                       break;
+	                                       
+	                       case 4:  sql = "delete from stud where rno=1";
+	                                       sm.executeUpdate(sql);
+	                                       System.out.println("Record is deleted");
+	                                       break;
+	                                    } 
+	                      } while(ch<5);
+	                  }
+	                                  catch(Exception e)
+                                           {  e.printStackTrace();  } 
+	          }
+                 }
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\MANGO\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+MANGO
+
+Design and Develop MongoDB Queries using CRUD operations. (Use CRUD operations, SAVE method, logical operators)
+
+MongoDB CRUD Operations
+
+//to start mongo client
+gurukul@ubuntu:~$ mongo
+
+//to list out database names
+> show dbs
+
+//to create database
+> use db1
+
+//to check in which database I am working
+> db
+
+//to drop database in which I am working
+> db.dropDatabase()
+
+//To create collection
+> db.createCollection('stud')
+
+//to list out collection names
+> show collections
+
+//create collection by inserting document
+> db.emp.insert({rno:1,name:'Bhavana'})
+
+//Every row/document can be different than other 
+> db.emp.insert({name:'Amit',rno:2})
+> db.emp.insert({rno:3, email_id:'a@gmail.com'})
+
+// To display data from collection
+//insert data by providing _id value
+> db.emp.insert({_id:1,rno:4,name:"Akash"})
+
+> db.emp.find()
+
+// trying to insert data with duplicate _id, it will not accept as _id is primary key field
+> db.emp.insert({_id:1,rno:5,name:"Reena"})
+E11000 duplicate key error index: db1.emp.$_id_  dup key: { : 1.0 }
+ 
+//Insert multiple documents at once
+> db.emp.insert([{rno:7,name:'a'},{rno:8,name:'b'},{rno:8,name:'c'}])
+
+> db.emp.find()
+
+// to insert multiple values for one key using []
+> db.emp.insert({rno:10,name:'Ankit',hobbies:['singing','cricket','swimming'],age:21})
+
+> db.emp.find()
+
+// Embedded document example
+> db.emp.insert({rno:11, Name: {Fname:"Bhavana", Mname:"Amit", Lname:"Khivsara"}})
+> db.emp.insert({rno:12, Name: "Janvi", Address:{Flat:501, Building:"Sai Appart", area:"Tidke colony", city: "Nashik", state:"MH", pin:423101}, age:22})
+
+// To insert date use ISODate function
+> db.emp.insert({rno:15, name:'Ravina', dob: ISODate("2019-09-14")})
+
+> db.emp.find()
+
+// Multi embedded document with data function
+> db.emp.insert({rno:17, name:"Ashika",date:Date(), awards:[{name:"Best c -Designer", year:2010, prize:"winner"},{name:"Wen site competition",year:2012,prize:"Runner-up"},{name:"Fashion show", year:2015,prize:"winner"}], city:"Nashik"})
+
+// ouput using pretty command
+> db.emp.find().pretty()
+
+// New collection for Find operation
+> db.stud.insert([{rno:1, name:'Ashiti'}, {rno:2,name:'Savita'}, {rno:3,name:'Sagar'}, {rno:4,name:'Reena'},{rno:5,name:'Jivan'}])
+
+//Simple Find Command
+> db.stud.find()
+
+//Find command with Condition 
+> db.stud.find({rno:5})
+
+//Find command with condition with giving name field only to show 
+> db.stud.find({rno:5},{name:1})
+
+//Find command with condition with giving name field only to show and _id to hide
+> db.stud.find({rno:5},{name:1,_id:0})
+
+// Find command to show only names without condition
+> db.stud.find({},{name:1,_id:0})
+
+// To display data whose rno is greater than 2
+> db.stud.find({rno:{$gt:2}})
+
+// To display data whose rno is less than equal to  2
+> db.stud.find({rno:{$lte:2}})
+
+// To display data whose rno is less than 2
+> db.stud.find({rno:{$lt:2}})
+
+// To display data whose rno is not equal to 2
+> db.stud.find({rno:{$ne:2}})
+
+// To display data whose rno is either 1 or 3 or 5 using in operator
+> db.stud.find({rno:{$in:[1,3,5]}})
+
+// To display data whose rno is either 1 or 3 or 5 or 7 or 9 using in operator
+> db.stud.find({rno:{$in:[1,3,5,7,9]}})
+
+//Sorting Command -1 is for Descending
+> db.stud.find().sort({rno:-1})
+
+//Sorting Command 1 is for Ascending
+> db.stud.find().sort({name:1})
+
+//Dispay rno & name whose rno is greater than 2. Show output in decending order by rno
+> db.stud.find({rno:{$gt:2}},{_id:0}).sort({rno:-1})
+
+//Collection with 3 and 5 rollno as duplicate values
+> db.stud.find()
+
+//Distinct command to show only unique values for roll no
+> db.stud.distinct("rno")
+[ 1, 2, 3, 4, 5 ]
+
+// Limit use to show only some records from starting- following command shows only first 2 records from collection
+
+> db.stud.find().limit(2)
+
+// Skip use to show all records after skipping some records- following command shows all records after first 2 records from collection
+
+> db.stud.find().skip(2)
+// Shows documents where name starting with A
+> db.stud.find({name:/^A/})
+
+// Shows documents where name ending with i
+> db.stud.find({name:/i$/})
+
+// Shows documents where name having letter  a anywhere 
+> db.stud.find({name:/a/})
+
+//findOne to show only first record
+> db.stud.findOne()
+
+// count to show number of documents in collection
+> db.stud.find().count()
+
+> db.stud.find({rno:{$gt:2}}).count()
+
+//Insert one embedded document( for address)
+> db.stud.insert({rno:8,address:{area:"College Road",city:"Nashik",state:"MH"},name:"Arya"})
+
+//To find document having city as Nashik(as city is key of address key specify "address.city"
+> db.stud.find({"address.city":"Nashik"})
+
+//Insert one document with multiple values(eg hobbies)
+> db.stud.insert({rno:9,hobbies:['singing','dancing','cricket']})
+
+//To use find command on multi values attribute(eg hobbies)
+> db.stud.find({hobbies:'dancing'})
+
+//$unset will remove the column rno from document matching the given condition
+> db.stud.update({rno:1},{$unset:{rno:1}})
+
+//$set to update the value of rno
+>db.stud.update({rno:2},{$set:{rno:22}})
+
+//upsert use to update document if condition found otherwise insert document with updates values.
+> db.stud.update({rno:50},{$set:{rno:55}},{upsert:true})
+
+//multi:true used to update in multiple documents
+> db.stud.update({rno:5},{$set:{rno:15}},{multiple:true})
+
+//It will remove record having rno as 4
+> db.stud.remove({rno:4})
+
+//It will remove only one record having rno as 4
+> db.stud.remove({rno:4},1)
+
+//It will remove all records
+> db.stud.remove({})
+
+#PART2
+MongoDB CRUD Operations
+
+//to start mongodb on windows
+To start Server:
+Goto cmd(Command Prompt)
+Goto Mongodb\bin folders and type following command
+C:\mongodb-win32-i386-3.2.3\bin>mongod --storageEngine=mmapv1 --dbpath SNJB
+Here SNJB is folder created inside bin folder.
+
+To start Client:
+Again open new terminal
+Goto Mogodb\bin folders and Type Mongo
+C:\mongodb-win32-i386-3.2.3\bin>mongo
+
+Type all Commands on Client Prompt.
+
+To close the terminal
+ First Type Exit on Client terminal
+>Exit
+Then Close terminal.
+
+Then press ^C at Server terminal
+Then Close terminal.
+
+//to list out database names
+> show dbs
+
+//to create database
+> use db1
+
+//to check in which database I am working
+> db
+
+//to drop database in which I am working
+> db.dropDatabase()
+
+//To create collection
+> db.createCollection('stud')
+
+//to list out collection names
+> show collections
+
+//create collection by inserting document
+> db.emp.insert({rno:1,name:'Bhavana'})
+
+//Every row/document can be different than other 
+> db.emp.insert({name:'Amit',rno:2})
+> db.emp.insert({rno:3, email_id:'a@gmail.com'})
+
+// To display data from collection
+> db.emp.find()
+
+//insert data by providing _id value
+> db.emp.insert({_id:1,rno:4,name:"Akash"})
+> db.emp.find()
+
+// trying to insert data with duplicate _id, it will not accept as _id is primary key field
+> db.emp.insert({_id:1,rno:5,name:"Reena"})
+E11000 duplicate key error index: db1.emp.$_id_  dup key: { : 1.0 }
+ 
+//Insert multiple documents at once
+> db.emp.insert ([{rno:7,name:'a'},{rno:8,name:'b'},{rno:8,name:'c' } ] )
+
+// to insert multiple values for one key using []
+> db.emp.insert({rno:10,name:'Ankit',hobbies:['singing','cricket','swimming'],age:21})
+
+// Embedded document example
+> db.emp.insert({rno:11, Name: {Fname:"Bhavana", Mname:"Amit", Lname:"Khivsara"}})
+> db.emp.insert({rno:12, Name: "Janvi", Address:{Flat:501, Building:"Sai Appart", area:"Tidke colony", city: "Nashik", state:"MH", pin:423101}, age:22})
+
+// To insert date use ISODate function
+> db.emp.insert({rno:15, name:'Ravina', dob: ISODate("2019-09-14")})
+
+// Multi embedded document with date function
+> db.emp.insert(
+{rno:17, name:"Ashika",
+date:Date(), 
+awards:[{
+name:"Best c -Designer", year:2010, prize:"winner"},
+{name:"Wen site competition",year:2012,prize:"Runner-up"},
+{name:"Fashion show", year:2015,prize:"winner"
+              }],
+ city:"Nashik"})
+
+// output using pretty command
+> db.emp.find().pretty()
+
+//Create  New collection for Different Find operation
+
+> db.stud.insert([{rno:1, name:'Ashiti'}, {rno:2,name:'Savita'}, {rno:3,name:'Sagar'}, {rno:4,name:'Reena'},{rno:5,name:'Jivan'}])
+
+//Simple Find Command
+> db.stud.find()
+
+//Find command with Condition 
+> db.stud.find({rno:5})
+
+//Find command with condition To display name field only. 
+> db.stud.find({rno:5},{name:1})
+
+//Find command with condition with giving name field only to show and _id to hide
+> db.stud.find({rno:5},{name:1,_id:0})
+
+// Find command to show only names without condition
+> db.stud.find({},{name:1,_id:0})
+
+// To display data whose rno is greater than 2
+> db.stud.find({rno:{$gt:2}})
+
+// To display data whose rno is less than equal to  2
+> db.stud.find({rno:{$lte:2}})
+
+// To display data whose rno is not equal to 2
+> db.stud.find({rno:{$ne:2}})
+
+// To display data whose rno is either 1 or 3 or 5 using in operator
+> db.stud.find({rno:{$in:[1,3,5]}})
+
+//Sorting Command -1 is for Descending
+> db.stud.find().sort({rno:-1})
+
+//Sorting Command 1 is for Ascending
+> db.stud.find().sort({name:1})
+
+//Display rno & name whose rno is greater than 2. Show output in descending order by rno
+> db.stud.find({rno:{$gt:2}},{_id:0}).sort({rno:-1})
+
+//Collection with 3 and 5 rollno as duplicate values
+> db.stud.find()
+
+//Distinct command to show only unique values for roll no
+> db.stud.distinct("rno")
+[ 1, 2, 3, 4, 5 ]
+
+// Limit use to show only some records from starting- following command shows only first 2 records from collection
+> db.stud.find().limit(2)
+
+// Skip use to show all records after skipping some records- following command shows all records after first 2 records from collection
+> db.stud.find().skip(2)
+
+// Shows documents where name starting with A
+> db.stud.find({name:/^A/})
+
+// Shows documents where name ending with i
+> db.stud.find({name:/i$/})
+
+// Shows documents where name having letter  a anywhere 
+> db.stud.find({name:/a/})
+
+//findOne to show only first record
+> db.stud.findOne()
+
+// count to show number of documents in collection
+> db.stud.find().count()
+> db.stud.find({rno:{$gt:2}}).count()
+
+//Insert one embedded document( for address)
+> db.stud.insert({rno:8,address:{area:"College Road",city:"Nashik",state:"MH"},name:"Arya"})
+
+//To find document having city as Nashik(as city is key of address key specify "address.city"
+> db.stud.find({"address.city":"Nashik"})
+
+//Insert one document with multiple values(eg hobbies)
+> db.stud.insert({rno:9,hobbies:['singing','dancing','cricket']})
+
+//To use find command on multi valued attribute(eg hobbies)
+> db.stud.find({hobbies:'dancing'})
+
+//$unset will remove the column rno from document matching the given condition
+> db.stud.update({rno:1},{$unset:{rno:1}})
+
+//$set to update the value of rno
+>db.stud.update({rno:2},{$set:{rno:22}})
+
+//upsert use to update document if condition found otherwise insert document with updates values.
+> db.stud.update({rno:50},{$set:{rno:55}},{upsert:true})
+//multi:true used to update in multiple documents
+> db.stud.update({rno:5},{$set:{rno:15}},{multiple:true})
+
+//It will remove record having rno as 4
+> db.stud.remove({rno:4})
+
+//It will remove only one record having rno as 4
+> db.stud.remove({rno:4},1)
+
+//It will remove all records
+> db.stud.remove({})
+
+// Array Operations:
+> db.stud.insert({_id:1,score:[10,11,12,13]})
+> db.stud.insert({_id:2,score:[10,11,12,13]})
+
+> db.stud.update({_id:1},{$push:{score:14}})
+
+> db.stud.find()
+{ "_id" : 1, "score" : [ 10, 11, 12, 13, 14 ] }
+{ "_id" : 2, "score" : [ 10, 11, 12, 13 ] }
+
+> db.stud.update({_id:1},{$push:{score:15}})
+> db.stud.find()
+{ "_id" : 1, "score" : [ 10, 11, 12, 13, 14, 15 ] }
+{ "_id" : 2, "score" : [ 10, 11, 12, 13 ] }
+
+> db.stud.update({_id:1},{$pull:{score:11}})
+> db.stud.find()
+{ "_id" : 1, "score" : [ 10, 12, 13, 14, 15 ] }
+{ "_id" : 2, "score" : [ 10, 11, 12, 13 ] }
+> db.stud.update({},{$pull:{score:10}})
+
+> db.stud.find()
+{ "_id" : 1, "score" : [ 12, 13, 14, 15 ] }
+{ "_id" : 2, "score" : [ 10, 11, 12, 13 ] }
+> db.stud.update({},{$pull:{score:13}},{multi:true})
+
+> db.stud.find()
+{ "_id" : 1, "score" : [ 12, 14, 15 ] }
+{ "_id" : 2, "score" : [ 10, 11, 12 ] }
+> db.stud.update({},{$pop:{score:1}})
+
+> db.stud.find()
+{ "_id" : 1, "score" : [ 12, 14 ] }
+{ "_id" : 2, "score" : [ 10, 11, 12 ] }
+> db.stud.update({},{$pop:{score:-1}})
+> db.stud.find()
+{ "_id" : 1, "score" : [ 14 ] }
+{ "_id" : 2, "score" : [ 10, 11, 12 ] }
+====================================================================================================================================================================================================================================================================================================
+
+Design & Develop MongoDB Queries using Aggregation and Indexing with suitable example using MongoDB
+
+MongoDB
+//Indexing
+
+//To create index on rno in ascending order(1)- 
+//Single field Index example
+
+> db.stud.createIndex({rno:1})
+
+//To show the list of Index 
+
+> db.stud.getIndexes()
+
+//Compound Index Example (-1 is descending & 1 is ascending)
+> db.stud.createIndex({rno:-1,name:1})
+
+> db.stud.getIndexes()
+
+// To drop single index
+> db.stud.dropIndex({rno:1})
+
+// To drop all indexes at a time
+> db.stud.dropIndexes()
+
+//Aggregation Example
+//Create Product collection
+
+> db.product1.insert([
+{ item:'paste',  amount:40,  customer:'Mike'}, 
+{ item:'Guitar', amount:200, customer:'Tom'},
+{ item:'milk',   amount:60,  customer:'Mike'},
+{ item:'pizza',  amount:150, customer:'Kiran'},
+{ item:'paste',  amount:40,  customer:'Kiran'},
+{ item:'pizza',  amount:150, customer:'Devika'},
+{ item:'paste',  amount:40,  customer:'Mike'},
+{ item:'paste',  amount:40,  customer:'Niraj'}, 
+{ item:'Guitar', amount:200, customer:'Reena'},
+{ item:'milk',   amount:60,  customer:'Mike'},
+{ item:'pizza',  amount:150, customer:'Devika'},
+{ item:'paste',  amount:40,  customer:'Devika'},
+{ item:'pizza',  amount:150, customer:'Kiran'},
+{ item:'paste',  amount:40,  customer:'Reena'}])
+
+//Syntax of aggregate
+
+db.product.aggregate(
+  [
+    {$match:{}},
+    {$group:{}},
+    {$sort :{}}
+  ])
+
+// To find total amount of money spend by each customer
+db.product1.aggregate([{$group:{_id:"$customer",total:{$sum:"$amount"}}}])
+
+//Find Total number of products Purchased by customer
+> db.product.aggregate([{$group:{_id:"$customer",total:{$sum:1}}}])
+
+//Maximum amount of product purchased by each customer
+> db.product.aggregate([{$group:{_id:"$customer",total:{$max:"$amount"}}}])
+
+//Minimum amount of product purchased by each customer
+> db.product.aggregate([{$group:{_id:"$customer",total:{$min:"$amount"}}}])
+
+//Amount earned by each product
+> db.product.aggregate([{$group:{_id:"$item",total:{$sum:"$amount"}}}])
+
+//Product wise Sell
+> db.product.aggregate([{$group:{_id:"$item",total:{$sum:1}}}])
+
+//Indexing
+//To create index on rno in ascending order(1)- 
+//Single field Index example
+
+> db.stud.createIndex({rno:1})
+
+//To show the list of Index 
+//v is version
+// key is on which field you created index
+//ns-name space(database name.collection name)
+//name- Name of index given by mongodb
+
+> db.stud.getIndexes()
+
+//Compound Index Example (-1 is descending & 1 is ascending)
+> db.stud.createIndex({rno:-1,name:1})
+
+> db.stud.getIndexes()
+
+// To drop single index
+> db.stud.dropIndex({rno:1})
+
+// To drop all indexes at a time
+> db.stud.dropIndexes()
+
+//Aggregation Example
+
+//Create Product collection
+
+> db.product.insert({ctype:'p', item:'paste',  amount:40,  customer:'Mike'})
+> db.product.insert({ctype:'o', item:'Guitar', amount:200, customer:'Tom'})
+> db.product.insert({ctype:'p', item:'milk',   amount:60,  customer:'Mike'})
+> db.product.insert({ctype:'p', item:'pizza',  amount:150, customer:'Kiran'})
+> db.product.insert({ctype:'p', item:'paste',  amount:40,  customer:'Kiran'})
+> db.product.insert({ctype:'o', item:'pizza',  amount:150, customer:'Devika'})
+> db.product.insert({ctype:'p', item:'paste',  amount:40,  customer:'Mike'})
+
+//Syntax of aggregate
+db.product.aggregate(
+  [
+    {$match:{}},
+    {$group:{}},
+    {$sort :{}}
+  ])
+
+// To find total amount of money spend by each customer
+db.product.aggregate([{$group:{_id:"$customer",total:{$sum:"$amount"}}}])
+
+//Find Total number of products Purchased by customer
+
+> db.product.aggregate([{$group:{_id:"$customer",total:{$sum:1}}}])
+
+//Maximum amount of product purchased by each customer
+> db.product.aggregate([{$group:{_id:"$customer",total:{$max:"$amount"}}}])
+
+//Minimum amount of product purchased by each customer
+> db.product.aggregate([{$group:{_id:"$customer",total:{$min:"$amount"}}}])
+
+//Amount earned by each product
+> db.product.aggregate([{$group:{_id:"$item",total:{$sum:"$amount"}}}])
+
+//Product wise Sell
+> db.product.aggregate([{$group:{_id:"$item",total:{$sum:1}}}])
+
+//total amount paid by each customer in descending order
+> db.product.aggregate([{$group:{_id:"$customer",total:{$sum:"$amount"}}},{$sort:{total:-1}}])
+
+//Amount of Items purchased by customer having ctype as p
+> db.product.aggregate([{$match:{ctype:"p"}},{$group:{_id:"$customer",total:{$sum:"$amount"}}}])
+
+====================================================================================================================================================================================================================================================================================================
+ Implement Map reduce operation with suitable example using MongoDB. 
+
+MapReduce in MongoDB
+
+// Create stud1 Collection by adding some documents in it.
+>db.stud1.insert([{Name:"Amit",Marks:80},{Name:"Amit",Marks:90},{Name:"Shreya",Marks:40},{Name:"Neha",Marks:80},{Name:"Neha",Marks:35}])
+
+// Example-1-Code
+> db.stud1.mapReduce(function(){  emit(this.Name,1)}, function(key,value){
+ return Array.sum(value)}, {out:"Name_Total"}).find()
+
+// Example-1- Output
+
+// Example-2-code
+> db.stud1.mapReduce(function(){ emit(this.Name,1)}, function(key,value){ return Array.sum(value)}, {out:"Name_Total"}).find().sort({value:1})
+
+// Example-2 Output
+
+// Example-3
+> db.stud1.mapReduce(function(){ emit(this.Name,1)}, function(key,value){ return Array.sum(value)}, {out:"Name_Total"}).find().sort({key:1})
+// Example-3 Output
+
+// Example-4
+> db.stud1.mapReduce(function(){ emit(this.Name,1)}, function(key,value){ return Array.sum(value)}, {out:"Name_Total"}).find().limit(1)
+// Example-4 Output
+
+
+// Example-5
+> db.stud1.mapReduce(function(){ emit(this.Name,this.Marks)}, function(key,value){ return Array.sum(value)}, {out:"Name_Total"}).find()
+// Example- 5 Output
+
+// Example-6
+> db.stud1.mapReduce(function(){ emit(this.Name,this.Marks)}, function(key,value){ return Array.avg(value)}, {out:"Name_Total"}).find()
+// Example-6- Output
+
+// Example-7
+> db.stud1.mapReduce(function(){ emit(this.Name,this.Marks)}, function(key,value){ return Array.avg(value)}, {query:{Marks:80},out:"Name_Total"}).find()
+
+// Example-8
+> db.stud1.mapReduce(function(){ emit(this.Name,this.Marks)}, function(key,value){ return Array.sum(value)}, {query:{Name:"Amit"}, out:"a"}).find()
+
+// Example-9
+> db.stud1.mapReduce(function(){ emit(this.Name,this.Marks)}, function(key,value){ return Array.sum(value)},{query:{Marks:80}, out:"a"}).find()
+
+// Example-10
+> db.stud1.mapReduce(function(){ emit(this.Name,this.Marks)}, function(key,value){ return Array.sum(value)}, {query:{Marks:{$gt:80}}, out:"a"}).find()
+
+====================================================================================================================================================================================================================================================================================================
+
+Write a program to implement Mongo DB database connectivity with Front End Language(Java) Implement Database navigation operations (add, delete, edit etc. ).
+
+
+import com.mongodb.*;
+public class JavaMongoProg {
+public static void main(String[] args) {
+		try {
+			MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+
+			DB db = mongoClient.getDB( "d2" );
+
+			DBCollection coll = db.createCollection("stud1",null);
+
+			BasicDBObject d1= new BasicDBObject("rno","1").append("name","Bhavana");
+			BasicDBObject d2= new BasicDBObject("rno","2").append("name","Reena");
+			BasicDBObject d3= new BasicDBObject("rno","3").append("name","Amit");
+
+			coll.insert(d1);
+			coll.insert(d2);
+			coll.insert(d3);
+			
+System.out.println("Data After Inserting 3 Document");
+
+			DBCursor cursor = coll.find();
+			while (cursor.hasNext())
+			  { 
+			System.out.println(cursor.next()); 
+			  }
+			
+BasicDBObject a1 = new BasicDBObject(); 
+			a1.put("name", "Bhavana"); 
+			BasicDBObject a2= new  BasicDBObject();
+			a2.put("name", "Neha"); 
+			BasicDBObject a3= new BasicDBObject(); 
+			a3.put("$set", a2); 
+			coll.update(a1, a3);
+			
+System.out.println("Data Updating record");
+			cursor = coll.find();
+			while (cursor.hasNext())
+			  { 
+			System.out.println(cursor.next()); 
+			  }
+			
+		BasicDBObject R1 = new BasicDBObject("name","Reena");
+		coll.remove(R1);
+		System.out.println("Data After deleting Reena record");
+		cursor = coll.find();
+		while (cursor.hasNext())
+		  { 
+		System.out.println(cursor.next()); 
+		  }
+		}
+
+			catch(Exception e)
+			{
+			e.printStackTrace(); 
+			}
+			}
+	}
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\2a
+
+
+
+
+create table Employee(Eno int primary key,Ename varchar(20) not null,Address varchar(20) default "Nashik",joindate varchar(20),post varchar(20),salary int check(salary>5000));
+
+insert into Employee values (101,"Mahesh ","Pune","Aug","HR",10000);
+
+select * from Employee;
+
+insert into Employee values (102,"Prathmesh","Karad","sep","SeniorProgrammer",30000);
+
+
+insert into Employee values (103,"Raj","Erando","March","JrProgrammer",30000);
+
+create table Emp_project(PrNo int, proj_name varchar(20), Loc int, Foreign Key(PrNo) references Employee (Eno));
+
+create index i1 on Employee(Ename);
+
+
+ show index from Employee;
+
+ insert into Emp_project values(101,"DBMS",3000);
+
+
+create view v1 as select Ename,post,salary from Employee;
+
+
+select Ename,post,salary from Employee;
+
+
+
+2b
+/*Creating and inserting values: */
+
+create table emp(Eid int,Ename varchar(20),Address varchar(20),Salary int,Commision int);
+insert into emp values(1,"Amit","Pune",35000,5000),(2,"Sneha","Pune",25000,NULL),(3,"Savita","Nashik",28000,2000),(4,"Pooja","Mumbai",19000,NULL),(5,"Sagar","Mumbai",25000,3000);
+create table Proj(PrNo int,Addr varchar(20));
+insert into Proj values(10,"Mumbai"),(20,"Pune"),(30,"Jalgoan");
+select * from emp;
+
+
+/*1.Find different locations from where employees belong to?*/
+select distinct Address from emp;
+
+/*2.What is maximum and minimum salary?*/
+select min(Salary),max(Salary) from emp;
+
+/*3.Display the content of employee table according to the
+ascending order of salary amount.*/
+select * from emp order by Salary;
+
+/*4.Find the name of employee who lived in Nasik or Pune city.*/
+select * from emp where Address in("Pune","Nashik");
+
+/*5.Find the name of employees who does not get commission.*/
+select * from emp where Commision is NULL;
+
+/*6.Change the city of Amit to Nashik.*/
+update emp set Address="Nashik" where Ename="Amit";
+
+/*7.Find the information of employees whose name starts with ‘A’.*/
+select * from emp where Ename like("A%");
+
+/*8.Find the count of staff from Mumbai.*/
+select count(Address) from emp where Address="Mumbai";
+
+/*9.Find the count of staff from each city.*/
+select Address, count(*) from emp group by Address;
+
+/*10.Find the address from where employees
+are belonging as well as where projects are going on.*/
+select Address from emp union select Addr from Proj order by Address;
+
+/*11.Find city wise minimum salary.*/
+select Address,min(Salary) from emp group by Address;
+
+/*12.Find city wise maximum salary having
+maximum salary greater than 26000.*/
+select Address,max(Salary) from emp group by Address having max(Salary)>26000;
+
+/*13.Delete the employee who is having
+salary greater than 30,000.*/
+delete from emp where Salary>30000;
+select * from emp;
+
+
+
+3 join
+
+ /*Creating table and inserting values: */ 
+create table Cust_info(C_id int,Cname varchar(20),City varchar(20));
+
+insert into Cust_info values(1,"John","Nashik"),(2,"Seema","Aurangabad"),(3,"Amita","Nagar"),(4,"Rakesh","Pune"),
+(5,"Samata","Nashik"),(6,"Ankita","Chandwad"),(7,"Bhavika","Pune"),(8,"Deepa","Mumbai"),(9,"Nitin","Nagpur"),(10,"Pooja","Pune");
+
+create table Acc_info(C_id int,Acc_Type varchar(20), Amount int);
+
+insert into Acc_info values(1,"Current",5000),(2,"Saving",20000),(3,"Saving",70000),(4,"Saving",50000),
+(5,"Current",35000),(6,"Loan",20000),(7,"Saving",50000),(8,"Saving",90000),(9,"Loan",8000),(10,"Current",45000);
+
+/*Show the cname, Acc_Type, amount information of customer who is having an saving account: */
+select Cname,Acc_Type,Amount from Cust_info join Acc_info on Cust_info.C_id=Acc_info.C_id where Acc_Type="Saving";
+
+/*Display the data using Natural, left and right join:*/
+select * from Cust_info inner join Acc_info on Cust_info.C_id=Acc_info.C_id;
+select * from Cust_info left join Acc_info on Cust_info.C_id=Acc_info.C_id;
+select * from Cust_info right join Acc_info on Cust_info.C_id=Acc_info.C_id;
+
+/*Display the information of customers living in the same city as of ‘pooja’: */
+select * from Cust_info inner join Acc_info on Cust_info.C_id=Acc_info.C_id where City=(select City from Cust_info where Cname="Pooja");
+
+/*Display the information of account, having less amount than average amount throughout the bank:*/	
+select * from Cust_info join Acc_info on Cust_info.C_id=Acc_info.C_id where Amount<(select avg(Amount) from Acc_info);
+
+/*Display the C_id having maximum amount in account:*/	
+select Acc_info.C_id from Acc_info where Amount=(select max(Amount) from Acc_info);	
+
+/*Display the amount and acc_type of those customers whose amount is the minimum amount of that
+Acc_type:*/
+select Acc_Type,Amount from Acc_info where Amount=any(select min(Amount) from Acc_info group by Acc_Type);
+
+/*Display the amount of those accounts whose amount is higher than amount of any saving account amount:*/
+select Amount from Acc_info where amount>any(select Amount from Acc_info where Acc_Type="Saving");
+
+
+
+4 procedure
+
+/*Tables:
+1. Borrower(Roll_no, Name, Date of Issue, Name of Book, Status)
+2. Fine (Roll no, Date, Amt)
+Question:
+• Accept Roll no and Name of Book from user.
+• Check the number of days (from date of issue).
+• If days are between 15 to 30 then fine amount will be Rs 5per day.
+• If no. of days>30, per day fine will be Rs 50 per day and for days less than 30, Rs. 5 per day.
+• After submitting the book, status will change from I to R.
+• If condition of fine is true, then details will be stored into fine table.
+• Also handles the exception by named exception handler or user define exception handler.
+
+Queries:
+*/
+create table Borrower(roll_no int,name varchar(20),DOI date,book varchar(20),status varchar(20));
+create table fine(roll_no int,days int,amt int);
+
+insert into Borrower values(23,"abc","2024-07-02","ABC","I"),(50,"pqr","2024-04-07","XYZ","I"),(34,"xyz","2024-03-12","dgh","I"),(12,"pqrs","2023-12-30","jim","I");
+select * from Borrower;
+
+delimiter $
+create procedure p1(r int,b varchar(20))
+begin
+declare idt date;
+declare diff int;
+declare fn int;
+select DOI into idt from Borrower where roll_no=r and book=b;
+update Borrower set status="R" where roll_no=r and book=b;
+select * from Borrower;
+select datediff(curdate(),idt) into diff;
+select diff;
+if(diff<=15) then
+  set fn=0;
+elseif (diff>15 and diff<=30) then
+  set fn=(diff-15)*5;
+  insert into fine values(r,diff,fn);
+else 
+  set fn=(diff-30)*50+75;
+  insert into fine values(r,diff,fn);
+end if;
+select * from fine;
+end;$
+call p1(50,"XYZ")$
+
+
+5 area
+
+
+/*Problem statement:
+Write a PL/SQL code block to calculate the area of a circle for a value of
+radius varying from 5 to 9. Store the radius and the corresponding values
+of calculated area in an empty table named areas, consisting of two
+columns, radius and area.
+*/
+
+create table Circle(radius decimal,area decimal(10,2));
+delimiter $
+create procedure calarea()
+BEGIN
+  declare r int;
+  declare a decimal(10,2);
+  set r=5;
+  lp:LOOP
+    set a=3.14*r*r;
+    insert into Circle values(r,a);
+    set r=r+1;
+    if(r>9) then
+      leave lp;
+    END if;
+  END LOOP lp;
+END$
+
+
+call calarea()$
+select * from Circle$
+
+
+
+
+
+
+
+
+mongo b1
+Create Institute Database and Create Student collection 
+1. RollNo 
+2. Name 
+3. Age  
+4. Branch 
+5. Address :{ City, State} 
+6. Hobbies (Array)
+
+1.Create database Institute
+use Institute
+
+2. Create collection Students. 
+	db.createCollection("Students")
+
+3. Insert 10 documents with above mentioned structure. 
+	db.Students.insertMany([
+    { RollNo: 1, Name: "Aryan Jain", Age: 20, Branch: "Computer", Address: { City: "Pune", State: "Maharashtra" }, Hobbies: ["Coding", "Reading"] },
+    { RollNo: 2, Name: "Rahul Sharma", Age: 21, Branch: "Mechanical", Address: { City: "Nashik", State: "Maharashtra" }, Hobbies: ["Football", "Gaming"] },
+    { RollNo: 3, Name: "Sanjay Kumar", Age: 19, Branch: "Civil", Address: { City: "Pune", State: "Maharashtra" }, Hobbies: ["Music", "Sketching"] },
+    { RollNo: 4, Name: "Pooja Singh", Age: 18, Branch: "Electrical", Address: { City: "Mumbai", State: "Maharashtra" }, Hobbies: ["Dance", "Cooking"] },
+    { RollNo: 5, Name: "Aditi Verma", Age: 22, Branch: "Computer", Address: { City: "Nagpur", State: "Maharashtra" }, Hobbies: ["Photography", "Painting"] },
+    { RollNo: 6, Name: "Aarav Patel", Age: 20, Branch: "Mechanical", Address: { City: "Ahmedabad", State: "Gujarat" }, Hobbies: ["Cricket", "Reading"] },
+    { RollNo: 7, Name: "Neha Gupta", Age: 19, Branch: "Civil", Address: { City: "Nashik", State: "Maharashtra" }, Hobbies: ["Coding", "Traveling"] },
+    { RollNo: 8, Name: "Ravi Mehta", Age: 21, Branch: "Electrical", Address: { City: "Pune", State: "Maharashtra" }, Hobbies: ["Gaming", "Football"] },
+    { RollNo: 9, Name: "Aman Joshi", Age: 22, Branch: "Mechanical", Address: { City: "Surat", State: "Gujarat" }, Hobbies: ["Reading", "Traveling"] },
+    { RollNo: 10, Name: "Shruti Desai", Age: 20, Branch: "Computer", Address: { City: "Pune", State: "Maharashtra" }, Hobbies: ["Dancing", "Singing"] }
+])
+
+4. Display all students’ information. 
+	db.Students.find()
+
+5. Display Student information whose age is greater than 15. 
+	db.Students.find({ Age: { $gt: 15 } })
+
+6. Display Student information sorted on name field
+	db.Students.find().sort({ Name: 1 })
+
+7. Update student branch Computer of RollNo 3. 
+db.Students.updateOne({ RollNo: 3 }, { $set: { Branch: "Computer" } })
+
+8. Remove document with RollNo 1 
+	db.Students.deleteOne({ RollNo: 1 })
+
+9. Display Student information whose name starts with A 
+	db.Students.find({ Name: { $regex: 'A' } })
+
+10. Display the total numbers of documents available in collection. 
+	db.Students.countDocuments()
+
+11. Display only first 5 documents. 
+	db.Students.find().limit(5)
+
+12. Display all documents instead of first 3. 
+	db.Students.find().skip(3)
+
+13. Display the name of Students who live in Pune City. 
+	db.Students.find({ "Address.City": "Pune" }, { Name: 1, _id: 0 })
+
+14. Display the list of different cities from where students are coming. 
+	db.Students.distinct("Address.City")
+
+15. Display the list of different cities with number of students from belonging to that city. 
+	db.Students.aggregate([
+    { $group: { _id: "$Address.City", studentCount: { $sum: 1 } } }
+])
+
+16. Display only Name of all students. 
+	db.Students.find({}, { Name: 1, _id: 0 })
+
+17. Display the hobbies of each student. 
+	db.Students.find({}, { Name: 1, Hobbies: 1, _id: 0 })
+
+18. Drop Collection
+	db.Students.drop()
+
+
+
+
+
+mongo b2
+// INDEXING OPERATIONS
+
+// 1. Create collection 'stud' with fields (rno, name, class)
+db.createCollection("stud");
+db.stud.insertMany([
+    { rno: 1, name: "Alice", class: "A" },
+    { rno: 2, name: "Bob", class: "B" },
+    { rno: 3, name: "Charlie", class: "A" }
+]);
+
+// 2. Create single index on field 'rno' in ascending order
+db.stud.createIndex({ rno: 1 });
+
+// 3. Create unique index on field 'rno'
+db.stud.createIndex({ rno: 1 }, { unique: true });
+
+// 4. Create compound index on field 'rno' in ascending order and 'name' in descending order
+db.stud.createIndex({ rno: 1, name: -1 });
+
+// 5. Display indexes created on 'stud' collection
+db.stud.getIndexes();
+
+// 6. Drop the index on 'rno'
+db.stud.dropIndex({ rno: 1 });
+
+
+// AGGREGATION OPERATIONS
+
+// 1. Create collection 'Product' and insert documents
+db.createCollection("Product");
+db.Product.insertMany([
+    { item: "paste", amount: 40, customer: "Mike" },
+    { item: "Guitar", amount: 200, customer: "Tom" },
+    { item: "milk", amount: 60, customer: "Mike" },
+    { item: "pizza", amount: 150, customer: "Kiran" },
+    { item: "paste", amount: 40, customer: "Kiran" },
+    { item: "pizza", amount: 150, customer: "Devika" },
+    { item: "paste", amount: 40, customer: "Mike" },
+    { item: "paste", amount: 40, customer: "Niraj" },
+    { item: "Guitar", amount: 200, customer: "Reena" },
+    { item: "milk", amount: 60, customer: "Mike" },
+    { item: "pizza", amount: 150, customer: "Devika" },
+    { item: "paste", amount: 40, customer: "Devika" },
+    { item: "pizza", amount: 150, customer: "Kiran" },
+    { item: "paste", amount: 40, customer: "Reena" }
+]);
+
+// 2. Perform Aggregate Operations
+
+// Minimum ($min)
+db.Product.aggregate([
+    { $group: { _id: "$item", minAmount: { $min: "$amount" } } }
+]);
+
+// Maximum ($max)
+db.Product.aggregate([
+    { $group: { _id: "$item", maxAmount: { $max: "$amount" } } }
+]);
+
+// Sum ($sum)
+db.Product.aggregate([
+    { $group: { _id: null, totalAmount: { $sum: "$amount" } } }
+]);
+
+// Average ($avg)
+db.Product.aggregate([
+    { $group: { _id: null, avgAmount: { $avg: "$amount" } } }
+]);
+
+// First ($first)
+db.Product.aggregate([
+    { $group: { _id: null, firstItem: { $first: "$item" } } }
+]);
+
+// Last ($last)
+db.Product.aggregate([
+    { $group: { _id: null, lastItem: { $last: "$item" } } }
+]);
